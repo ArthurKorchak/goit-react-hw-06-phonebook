@@ -1,25 +1,31 @@
-import { Contact } from './Contact';
-import PropTypes from 'prop-types';
+import { useSelector, useDispatch } from 'react-redux';
+import { deleteItem } from '../../redux/itemsSlice';
 import s from './ContactsList.module.css';
+import { deleteFromLS } from '../../service/local-storage';
 
-export function ContactsList({ deleteContact, currentContacts }) {
-    return (
-        <ul className={s.contactsList}>
-            <Contact
-                currentContacts={currentContacts}
-                deleteContact={deleteContact}
-            />
-        </ul>
-    );
-};
+export function ContactsList() {
+  const items = useSelector(state => state.items);
+  const dispatch = useDispatch();
 
-ContactsList.propTypes = {
-    deleteContact: PropTypes.func.isRequired,
-    currentContacts: PropTypes.arrayOf(
-        PropTypes.shape({
-            id: PropTypes.string.isRequired,
-            name: PropTypes.string.isRequired,
-            number: PropTypes.string.isRequired,
-        }).isRequired
-    ).isRequired,
-};
+  function handleDelete(id) {
+    dispatch(deleteItem(id));
+    deleteFromLS(id);
+  }
+
+  return (
+    <ul className={s.contactsList}>
+      {items.map(({ id, name, number }) => (
+        <li key={id}>
+          <div className={s.contact}>
+            <p>
+              {name}: <span>{number}</span>
+            </p>
+            <button type="button" onClick={() => handleDelete(id)}>
+              Delete
+            </button>
+          </div>
+        </li>
+      ))}
+    </ul>
+  );
+}
