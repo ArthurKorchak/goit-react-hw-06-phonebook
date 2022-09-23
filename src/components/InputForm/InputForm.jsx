@@ -1,8 +1,6 @@
 import { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { addItem } from '../../redux/itemsSlice';
-import { addToLS } from '../../service/local-storage';
-import { nanoid } from 'nanoid';
 import s from './InputForm.module.css';
 
 export function InputForm() {
@@ -26,9 +24,7 @@ export function InputForm() {
     if (items.reduce((acc, item) => [...acc, item.name], []).includes(name)) {
       alert(`${name} is already in contacts`);
     } else {
-      const id = nanoid();
-      dispatch(addItem({ id, name, number }));
-      addToLS({ id, name, number });
+      dispatch(addItem({ name, number }));
       setName('');
       setNumber('');
     }

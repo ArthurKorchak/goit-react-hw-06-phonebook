@@ -1,17 +1,12 @@
 import { useSelector, useDispatch } from 'react-redux';
 import { deleteItem } from '../../redux/itemsSlice';
 import s from './ContactsList.module.css';
-import { deleteFromLS } from '../../service/local-storage';
 
 export function ContactsList() {
   const items = useSelector(state => state.items);
-  const filter = useSelector(state => state.filter[0]);
+  const filter = useSelector(state => state.filter);
   const dispatch = useDispatch();
   const currentContacts = items.filter(item => item.name.toLowerCase().includes(filter));
-  function handleDelete(id) {
-    dispatch(deleteItem(id));
-    deleteFromLS(id);
-  }
 
   return (
     <ul className={s.contactsList}>
@@ -21,7 +16,7 @@ export function ContactsList() {
             <p>
               {name}: <span>{number}</span>
             </p>
-            <button type="button" onClick={() => handleDelete(id)}>
+            <button type="button" onClick={() => dispatch(deleteItem(id))}>
               Delete
             </button>
           </div>
