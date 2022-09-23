@@ -5,8 +5,9 @@ import { deleteFromLS } from '../../service/local-storage';
 
 export function ContactsList() {
   const items = useSelector(state => state.items);
+  const filter = useSelector(state => state.filter[0]);
   const dispatch = useDispatch();
-
+  const currentContacts = items.filter(item => item.name.toLowerCase().includes(filter));
   function handleDelete(id) {
     dispatch(deleteItem(id));
     deleteFromLS(id);
@@ -14,7 +15,7 @@ export function ContactsList() {
 
   return (
     <ul className={s.contactsList}>
-      {items.map(({ id, name, number }) => (
+      {currentContacts.map(({ id, name, number }) => (
         <li key={id}>
           <div className={s.contact}>
             <p>
